@@ -4,16 +4,14 @@ const port = process.env.PORT || 5050;
 const mysql = require('mysql');
 const path = require('path');
 const router = express.Router();
-
 const app = express();
-
 app.set('view engine', 'ejs');
 
 const con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "D23asm774#",
-  database: "nodelogin"
+  database: "Project3"
 });
 
 con.connect((err) => {
@@ -32,38 +30,14 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 router.get('/', (req, res) => {
-  res.render('login');
-});
+  let sql = 'SELECT * FROM SalestoDate';
+  con.query(sql, (error, results, fields) => {
+    if(error) throw error;
 
-router.post('/auth', (req, res) => {
-  var username = req.body.username;
-  var password = req.body.password;
-  if (username && password) {
-    con.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], (error, results, fields) => {
-      if (results.length > 0) {
-        req.session.loggedin = true;
-        req.session.username = username;
-        res.redirect('/home');
-      } else {
-        res.send('Incorrect Username and/or Password!');
-      }
-      
-      res.end();
-    });
-  } else {
-    res.send('Please enter Username and Password!');
-    res.end();
-  }
-});
+    console.log(fields);
 
-router.get('/home', (req, res) => {
-  if (req.session.loggedin) {
-    // Query the database for Sales to Date
-    // Return data to home page
-  } else {
-    res.send('Please login to view this page!');
-  }
-  res.end();
+    res.render('home', { data: results });
+  });
 });
 
 app.use('/', router);

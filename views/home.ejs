@@ -1,9 +1,20 @@
 <% include partials/header %>
 
-<h1>Welcome home!</h1>
+<h1>Sales To Date</h1>
 
-<table id="results-table">
-  
+<table class="salesToDateTable">
+  <tr>
+    <td>Product ID</td>
+    <td>Product Name</td>
+    <td>Total Product Orders</td>
+  </tr>
+  <%data.forEach(value => { %>
+    <tr>
+      <td><%= value.P_ID %></td>
+      <td><%= value.P_Name%></td>
+      <td><%= value["Orders for Products"]%></td>
+    </tr>
+  <%});%>
 </table>
 
 <% include partials/footer %>
