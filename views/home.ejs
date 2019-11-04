@@ -10,9 +10,9 @@
   </tr>
   <%data.forEach(value => { %>
     <tr>
-      <td><%= value.P_ID %></td>
-      <td><%= value.P_Name%></td>
-      <td><%= value["Orders for Products"]%></td>
+      <td><%= value[0] %></td>
+      <td><%= value[1]%></td>
+      <td><%= value[2]%></td>
     </tr>
   <%});%>
 </table>

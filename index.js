@@ -1,23 +1,30 @@
 const express = require('express');
 const session = require('express-session');
 const port = process.env.PORT || 5050;
-const mysql = require('mysql');
+const oracledb = require('oracledb');
 const path = require('path');
 const router = express.Router();
 const app = express();
 app.set('view engine', 'ejs');
 
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "D23asm774#",
-  database: "Project3"
-});
+let data;
 
-con.connect((err) => {
+oracledb.getConnection({
+  user: 'DAGUINALDO',
+  password: 'DAGUINALDO#',
+  connectString: '129.7.240.3/orcl'
+}, (err, connection) => {
   if(err) throw err;
 
-  console.log("Successfully connected to MySQL.");
+  console.log("Successfully connected to Oracle Database.");
+
+  let sql = 'SELECT * FROM SalestoDate';
+  connection.execute(sql, (err, results) => {
+    if(err) throw err;
+
+    // console.log(results.rows);
+    data = results.rows;
+  });
 });
 
 app.use(express.urlencoded({ extended: true }));
@@ -30,12 +37,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 router.get('/', (req, res) => {
-  let sql = 'SELECT * FROM SalestoDate';
-  con.query(sql, (error, results, fields) => {
-    if(error) throw error;
-
-    res.render('home', { data: results });
-  });
+  res.render('home', { data: data });
 });
 
 app.use('/', router);
