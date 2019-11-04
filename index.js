@@ -34,8 +34,6 @@ router.get('/', (req, res) => {
   con.query(sql, (error, results, fields) => {
     if(error) throw error;
 
-    console.log(fields);
-
     res.render('home', { data: results });
   });
 });
